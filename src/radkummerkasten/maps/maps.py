@@ -55,5 +55,8 @@ class Maps(flask.Blueprint):
             except jinja2.exceptions.TemplateNotFound:
                 response = (flask.jsonify(error=f"{path} not found."), 404)
             except werkzeug.routing.exceptions.BuildError:
-                response = (flask.jsonify(error=f"Internal server error for {path}."), 500)
+                response = (
+                    flask.jsonify(error=f"Internal server error for {path}."),
+                    500,
+                )
         return response
