@@ -30,8 +30,8 @@ jobs:
       matrix:
         os: 
           - ubuntu-latest
-          # let’s be honest: this is never going to be hosted on Windows
-          # (I hope) or Mac
+          # let’s be honest: this is never going to be hosted
+          # on Windows (I hope) or Mac
           # - windows-latest
           # - macos-latest
         python_version:

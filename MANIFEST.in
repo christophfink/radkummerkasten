@@ -1,7 +1,7 @@
 # We set include_package_data = False, which is why MANIFEST.in defines only
 # what is included in sdist, while package_data in pyproject.toml sets what is
 # included in wheels
-recursive-include src/**/static *.json *.sass *.js *.js.map *.svg *.png *.jpg *.wepb *.webmanifest *.woff2
+recursive-include src/**/static *.ico *.json *.sass *.js *.js.map *.svg *.png *.jpg *.wepb *.webmanifest *.woff2
 recursive-include src/**/templates *.jinja
 recursive-include build_backend *.py
 recursive-include tests *.py

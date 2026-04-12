@@ -36,6 +36,11 @@ class Radkummerkasten(flask.Blueprint):
             view_func=self.radkummerkasten,
             methods=("GET",),
         )
+        self.add_url_rule(
+            "/favicon.ico",
+            endpoint="favicon",
+            redirect_to=application.url_for("static", filename="images/favicon.ico"),
+        )
 
     def radkummerkasten(self):
         """Return the single-page radkummerkasten front page."""
@@ -53,6 +58,5 @@ class Radkummerkasten(flask.Blueprint):
         #         "i’m just trying out how flask_mail works (and whether it does)."
         #     ),
         # )
-        # print(flask.current_app.template_folder)
         user = self.user_manager.current_user
         return flask.render_template("map.html.jinja", user=user)

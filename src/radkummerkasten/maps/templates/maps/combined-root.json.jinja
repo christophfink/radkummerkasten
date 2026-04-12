@@ -7,7 +7,7 @@
     },
     {
       "id": "radlkarte",
-      "url": "http://localhost:5000/static/maps/sprites/colour"
+      "url": "{{url_for('maps.asset', path='sprites/colour', _external=True)}}"
     }
   ],
   "glyphs": "https://mapsneu.wien.gv.at/basemapv/bmapv/3857/resources/fonts/{fontstack}/{range}.pbf",
@@ -23,7 +23,7 @@
       "minzoom": 0,
       "maxzoom": 16.9,
       "scheme": "xyz",
-      "url": "/static/maps/basemapv-bmapv-3857.json"
+      "url": "{{url_for('maps.asset', path='basemapv-bmapv-3857.json', _external=True)}}"
     },
     "schummerung": {
       "type": "raster",
@@ -12857,13 +12857,6 @@
       }
     },
     {
-      "id": "radkummerkasten-issues",
-      "type": "circle",
-      "source": "issues",
-      "source-layer": "issues",
-      "paint": {}
-    },
-    {
       "id": "TXT/BAHNHOF_RAILJET/BHF_L13-20/label/Name2",
       "type": "symbol",
       "source": "esri",
@@ -18623,6 +18616,65 @@
         "text-color": "rgba(117, 106, 100, 1.0)",
         "text-halo-color": "rgba(240, 240, 240, 1.0)",
         "text-halo-width": 0.8
+      }
+    },
+    {
+      "id": "radkummerkasten-issues",
+      "type": "symbol",
+      "source": "issues",
+      "source-layer": "issues",
+      "paint": {},
+      "layout": {
+        "icon-image": "radlkarte:marker",
+        "icon-anchor": "bottom",
+        "icon-offset": [0, -3],
+        "icon-size": 0.75,
+        "icon-overlap": "always",
+        "symbol-sort-key": ["get", "symbol-sort-key"]
+      },
+      "filter": [
+        "==",
+        "num_issues",
+        1
+      ]
+    },
+    {
+      "id": "radkummerkasten-issues-cluster",
+      "type": "circle",
+      "source": "issues",
+      "source-layer": "issues",
+      "filter": [
+        ">",
+        "num_issues",
+        1
+      ],
+      "paint": {
+        "circle-radius": 20.0,
+        "circle-blur": 0.2,
+        "circle-color": "#f0f0f0"
+      }
+    },
+    {
+      "id": "radkummerkasten-issues-cluster-num-issues",
+      "type": "symbol",
+      "source": "issues",
+      "source-layer": "issues",
+      "filter": [
+        ">",
+        "num_issues",
+        1
+      ],
+      "paint": {},
+      "layout": {
+        "text-field": [
+            "format",
+            ["get", "num_issues"]
+        ],
+        "text-font": [
+          "Corbel Bold Italic"
+        ],
+        "text-size": 20,
+        "text-overlap": "always"
       }
     }
   ]

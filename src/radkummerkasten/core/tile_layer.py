@@ -4,10 +4,13 @@
 """Compute vector tiles of a dataset for a given zoom level and tile index."""
 
 import functools
+import re
+import warnings
 
 import flask
 import geopandas
 import mercantile
+import pyogrio
 import shapely
 import vt2pbf
 
@@ -18,7 +21,8 @@ __all__ = [
 ]
 
 
-MAX_ZOOM = 24
+MIN_ZOOM = 7
+MAX_ZOOM = 17
 TILE_WIDTH = TILE_HEIGHT = 4096
 TILE_BUFFER = 64
 
@@ -47,20 +51,108 @@ class TileLayer:
     @functools.cached_property
     def bounds(self):
         """The geographic bounds of the layer."""
-        data = geopandas.read_file(self.data)
-        bounds = [float(coordinate) for coordinate in data.total_bounds]
+        bounds = [
+            float(coordinate)
+            for coordinate in pyogrio.read_info(self.data, layer=0)["total_bounds"]
+        ]
         return bounds
 
     @functools.cached_property
     def fields(self):
-        """The geographic bounds of the layer."""
-        data = geopandas.read_file(self.data)
+        """The attribute fields of the layer."""
+        data = geopandas.read_file(self.data, layer=0)
         fields = [
             str(column_name)
             for column_name in data.columns
             if column_name != "geometry"
         ]
         return fields
+
+    @functools.cached_property
+    def layers(self):
+        """Layers contained in the data file."""
+        layers = list(geopandas.list_layers(self.data)["name"])
+        return layers
+
+    @functools.cached_property
+    def layers_by_zoom_level(self):
+        """Enumerate ``self.data``’s layers by zoom level."""
+        layers_by_zoom_level = {}
+        layers = []
+
+        zoom_layer_re = re.compile("^z(?P<min>[0-9]+)-(?P<max>[0-9]+)$")
+
+        for layer in self.layers:
+            try:
+                min_zoom, max_zoom = zoom_layer_re.match(layer).groups()
+                layers.append(
+                    {
+                        "name": layer,
+                        "min_zoom": int(min_zoom),
+                        "max_zoom": int(max_zoom),
+                    }
+                )
+            except AttributeError:  # 'NoneType' object has no attribute 'groups'
+                pass
+        if not layers:
+            if len(self.layers) > 1:
+                warnings.warn(
+                    f"Found multiple layers in {self.data}, "
+                    "but none match layer name template (e.g., ’z0-24’).",
+                    RuntimeWarning,
+                    stacklevel=1,
+                )
+            layers = [
+                {
+                    "name": self.layers[0],
+                    "min_zoom": MIN_ZOOM,
+                    "max_zoom": MAX_ZOOM,
+                }
+            ]
+        else:
+            layers = sorted(layers, key=lambda layer: layer["min_zoom"])
+
+            layers[0]["min_zoom"] = MIN_ZOOM
+            layers[-1]["max_zoom"] = MAX_ZOOM
+
+            overlapping = any(
+                (layers[i]["max_zoom"] > layers[i + 1]["min_zoom"])
+                for i in range(len(layers) - 1)
+            )
+            if overlapping:
+                warnings.warn(
+                    f"Overlapping zoom level layers found in {self.data}, "
+                    "results may vary.",
+                    RuntimeWarning,
+                    stacklevel=1,
+                )
+
+        for layer in layers:
+            for zoom_level in range(layer["min_zoom"], layer["max_zoom"] + 1):
+                layers_by_zoom_level[zoom_level] = layer["name"]
+
+        return layers_by_zoom_level
+
+    def read_file_at_zoom_level(self, zoom_level, **kwargs):
+        """
+        Read the appropriate layer of multi-layer GPKG.
+
+        zoom_level : int
+            the TMS/vector tile zoom level to read data for
+        **kwargs
+            passed through to ``geopandas.read_file()``
+
+        """
+        try:
+            del kwargs["layer"]
+        except KeyError:
+            pass
+
+        return geopandas.read_file(
+            self.data,
+            layer=self.layers_by_zoom_level[zoom_level],
+            **kwargs,
+        )
 
     def empty_cache(self):
         """Delete the entire content of the cache."""
@@ -101,7 +193,7 @@ class TileLayer:
             # Add a buffer that would be 64 units (of 4096 width) in the output pbf
             mask = shapely.box(*bounds).buffer(width / (TILE_HEIGHT / TILE_BUFFER))
 
-            features = geopandas.read_file(self.data, mask=mask).clip(mask, sort=True)
+            features = self.read_file_at_zoom_level(z, mask=mask).clip(mask, sort=True)
 
             if len(features) > 0:
                 # make sure we don’t have multigeometries
@@ -119,7 +211,7 @@ class TileLayer:
                 )
 
                 features = features.reset_index(drop=True)
-                features["id"] = features.index
+                features["id_"] = features.index
 
                 features = features.apply(self._convert_feature, axis=1).to_list()
 
@@ -178,7 +270,7 @@ class TileLayer:
     @staticmethod
     def _convert_feature(row):
         row = row.to_dict()
-        id_ = row.pop("id")
+        id_ = row.pop("id_")
         geometry = row.pop("geometry")
 
         geometry_type = 0  # UNKNOWN

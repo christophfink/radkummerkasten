@@ -3,6 +3,7 @@
 
 """Common fixtures and settings for testing radkummerkasten."""
 
+import json
 import os
 import pathlib
 import shutil
@@ -75,18 +76,17 @@ def data_directory():
 
 
 @pytest.fixture(scope="function")
-def expected_tile_json(request, data_directory):
+def expected_tilejson(request, data_directory):
     """Read the expected content of a vector tile from disk."""
     return pathlib.Path(data_directory / f"{request.param}.tilejson").read_text()
 
 
 @pytest.fixture(scope="function")
-def expected_tile_pbf(request, data_directory):
+def expected_tile(request, data_directory):
     """Read the expected content of a vector tile from disk."""
-    tile_pbf = (data_directory / f"{request.param}.pbf").read_bytes()
-    if tile_pbf.endswith(b"\r\n"):  # weird line feeds when reading on windows
-        tile_pbf = tile_pbf[:-2] + b"\n"
-    return tile_pbf
+    with (data_directory / f"{request.param}.json").open() as f:
+        tile = json.load(f)
+    return tile
 
 
 @pytest.fixture(scope="session")

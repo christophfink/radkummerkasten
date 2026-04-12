@@ -9,7 +9,7 @@ _DATA_DIR = pathlib.Path(__file__).parent.resolve() / "data"
 
 
 ADDITIONAL_TILE_LAYERS = {
-    "radlkarte": _DATA_DIR / "radlkarte-wien.geojson",
+    "radlkarte": _DATA_DIR / "radlkarte-wien.gpkg",
 }
 
 ADDRESS_LOOKUP_LAYER = _DATA_DIR / "austrian-addresses-voronoi.gpkg.zip"

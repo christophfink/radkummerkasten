@@ -17,3 +17,4 @@ class DefaultConfiguration(BaseConfiguration):
     ADDITIONAL_TILE_LAYERS = {}
     STATIC_FOLDER = None
     TEMPLATE_FOLDER = None
+    SERVER_NAME = "localhost"

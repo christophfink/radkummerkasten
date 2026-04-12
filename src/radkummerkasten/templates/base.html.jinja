@@ -42,7 +42,7 @@
 
         {% block map_pane %}
         <div id="map">
-             <div class="d-flex justify-content-center">
+             <div class="d-flex justify-content-center h-100 align-items-center">
                  <div class="spinner-border" role="status">
                      <span class="visually-hidden">Loading …</span>
                  </div>
@@ -51,10 +51,20 @@
         {% endblock %}
 
         {% block profile_pane %}
-        <div id="profile-pane" class="offcanvas offcanvas-top">
+        <div id="profile-pane" class="offcanvas offcanvas-top rounded-bottom h-75">
             <!--// {{ user.id }} //-->
             <!--// {{ user.email_address }} //-->
-             <div class="d-flex justify-content-center">
+             <div class="d-flex justify-content-center h-100 align-items-center">
+                 <div class="spinner-border" role="status">
+                     <span class="visually-hidden">Loading …</span>
+                 </div>
+             </div>
+        </div>
+        {% endblock %}
+
+        {% block issue_pane %}
+        <div id="issue-pane" class="offcanvas offcanvas-bottom rounded-top h-75">
+             <div class="d-flex justify-content-center h-100 align-items-center">
                  <div class="spinner-border" role="status">
                      <span class="visually-hidden">Loading …</span>
                  </div>
@@ -65,7 +75,7 @@
         {# toggles for panes #}
         <nav class="navbar fixed-bottom bg-body-tertiary">
             <div class="container-fluid">
-                <div class="navbar-nav">
+                <div class="navbar-nav w-100 d-flex flex-row justify-content-between">
                     <a 
                         class="nav-link icon icon-hover icon-user"
                         href="/profile"
@@ -78,6 +88,9 @@
                     <a 
                         class="nav-link icon icon-hover icon-add-issue"
                         href="/issues/new"
+                        data-bs-toggle="offcanvas"
+                        data-bs-target="#issue-pane"
+                        aria-controls="issue-pane"
                     >
                         <span class="visually-hidden">Report issue</span>
                     </a>

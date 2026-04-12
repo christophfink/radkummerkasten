@@ -143,7 +143,7 @@ def build_ecmascript(f):
     def wrapper(*args, **kwargs):
         compiled_ecmascript_file = _compile_ecmascript_file(_find_ecmascript_files())
         results = f(*args, **kwargs)
-        compiled_ecmascript_file.unlink()
+        compiled_ecmascript_file.unlink(missing_ok=True)
         return results
 
     return wrapper
@@ -168,7 +168,10 @@ def build_sass(f):
             _compile_sass_file(sass_file) for sass_file in _find_sass_files()
         ]
         results = f(*args, **kwargs)
-        [compiled_sass_file.unlink() for compiled_sass_file in compiled_sass_files]
+        [
+            compiled_sass_file.unlink(missing_ok=True)
+            for compiled_sass_file in compiled_sass_files
+        ]
         return results
 
     return wrapper

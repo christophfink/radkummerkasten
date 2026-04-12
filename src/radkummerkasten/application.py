@@ -5,7 +5,7 @@
 
 import pathlib
 
-from . import api, auth, factory, frontend, tiles
+from . import api, auth, factory, frontend, maps, tiles
 from .database import Database
 from .utilities.mail import Mail
 
@@ -37,5 +37,6 @@ def create_app(instance_path=DEFAULT_INSTANCE_PATH):
     application.register_blueprint(api.Address(application))
     application.register_blueprint(api.Issues(application))
     application.register_blueprint(auth.Auth(application))
+    application.register_blueprint(maps.Maps(application))
 
     return application

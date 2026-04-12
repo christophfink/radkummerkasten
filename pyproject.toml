@@ -13,6 +13,7 @@ authors = [
 ]
 
 dependencies = [
+    "filelock",
     "fiona",
     "flask",
     "flask-cors",
@@ -23,6 +24,7 @@ dependencies = [
     "Pillow",
     "pyogrio",
     "requests",
+    "scikit-learn",
     "shapely",
     "sqlalchemy",
     "vt2pbf",
@@ -62,6 +64,7 @@ docs = [
     "sphinxcontrib-images"
 ]
 tests = [
+    "protobuf",
     "pytest",
     "pytest-cov",
     "pytest-lazy-fixtures",
@@ -115,6 +118,7 @@ testpaths = ["tests"]
 [tools.radkummerkasten-build-backend]
 sass_files = ["src/radkummerkasten/static/style/radkummerkasten.sass"]
 ecmascript_files = [
+    "src/radkummerkasten/static/script/maplibre-preload.js",
     "src/radkummerkasten/static/script/radkummerkasten-map.js",
     "src/radkummerkasten/static/script/radkummerkasten.js",
 ]
@@ -127,6 +131,7 @@ version = {attr = "radkummerkasten.__version__"}
 
 [tool.setuptools.package-data]
 "*" = [
+    "*.ico",
     "*.jinja",
     "*.jpg",
     "*.js.map",

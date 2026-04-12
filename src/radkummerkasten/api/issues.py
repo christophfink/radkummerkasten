@@ -4,9 +4,8 @@
 """Look up the closest street issue for a pair of coordinates."""
 
 import flask
-import geopandas
-from sqlalchemy import select
 
+from ..core import GeopackageUpdater
 from ..database import Database
 from ..database.models import (  # IssueType,; User,
     Issue,
@@ -152,26 +151,4 @@ class Issues(flask.Blueprint):
 
     def update_geopackage(self):
         """Update the geopackage copy of the issue table."""
-        data = {
-            "id": [],
-            "lon": [],
-            "lat": [],
-        }
-        with self.database.session() as session:
-            for issue_id, lon, lat in session.execute(
-                select(Issue.id, Issue.lon, Issue.lat)
-            ):
-                data["id"].append(issue_id)
-                data["lon"].append(lon)
-                data["lat"].append(lat)
-        issues = geopandas.GeoDataFrame(
-            {
-                "id": data["id"],
-                "geometry": geopandas.points_from_xy(
-                    data["lon"],
-                    data["lat"],
-                    crs="EPSG:4326",
-                ),
-            }
-        )
-        issues.to_file(self.tile_layer.data)
+        GeopackageUpdater(self.application).update_geopackage()
