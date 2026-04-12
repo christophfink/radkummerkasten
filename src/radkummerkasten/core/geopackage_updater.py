@@ -126,7 +126,7 @@ class GeopackageUpdater:
         """Cluster the point coordinates in ``df`` for a certain TMS zoom level."""
         eps = EPSILON_BY_ZOOM_LEVEL[zoom_level]
         if eps == 0:
-            clusters = df.assign("num_issues", 1)
+            clusters = df.assign(num_issues=1)
         else:
             clusters = self.cluster(df, eps)
             clusters = clusters.dissolve(
@@ -142,8 +142,6 @@ class GeopackageUpdater:
             clusters["geometry"] = (
                 clusters["geometry"].to_crs("EPSG:3857").centroid.to_crs(orig_crs)
             )
-
-        # clusters = clusters[["id", "num_issues", "symbol-sort-key", "geometry"]]
 
         return clusters
 
