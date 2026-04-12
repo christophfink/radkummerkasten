@@ -53,11 +53,7 @@ class Maps(flask.Blueprint):
                     mimetype=mimetypes.guess_type(path)[0],
                 )
             except jinja2.exceptions.TemplateNotFound:
-                response = flask.Response(
-                    flask.jsonify(error=f"{path} not found."), 404
-                )
+                response = (flask.jsonify(error=f"{path} not found."), 404)
             except werkzeug.routing.exceptions.BuildError:
-                response = flask.Response(
-                    flask.jsonify(error=f"Internal server error for {path}."), 500
-                )
+                response = (flask.jsonify(error=f"Internal server error for {path}."), 500)
         return response
