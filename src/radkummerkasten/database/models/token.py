@@ -25,6 +25,7 @@ DEFAULT_EXPIRATION_DURATION = datetime.timedelta(minutes=15)
 
 class Token(Base):
     """An auth token."""
+    # pylint: disable=too-few-public-methods
 
     token: Mapped[str] = mapped_column(
         default_factory=lambda: secrets.token_urlsafe(32)

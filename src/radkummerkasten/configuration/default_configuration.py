@@ -12,6 +12,7 @@ class BaseConfiguration:
 
 class DefaultConfiguration(BaseConfiguration):
     """Default configuration."""
+    # pylint: disable=too-few-public-methods
 
     PERMANENT_SESSION_LIFETIME = datetime.timedelta(weeks=26)
     ADDITIONAL_TILE_LAYERS = {}

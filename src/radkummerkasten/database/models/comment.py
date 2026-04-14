@@ -30,6 +30,7 @@ class Comment(Base):
 
     Note that the first comment to an issue is shown as the issue text.
     """
+    # pylint: disable=too-few-public-methods
 
     title: Mapped[Optional[str]]
     text: Mapped[str]

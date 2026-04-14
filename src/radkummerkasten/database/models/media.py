@@ -32,6 +32,7 @@ class Media(Base):
 
     Currently restricted to photos/images.
     """
+    # pylint: disable=too-few-public-methods
 
     comment_id: Mapped[uuid.UUID] = mapped_column(
         ForeignKey("comment.id"),

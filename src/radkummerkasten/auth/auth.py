@@ -69,7 +69,7 @@ class Auth(flask.Blueprint):
         else:
             print("not valid?")
             print(form.errors)
-            self._backend.send_magic_link(form.email_address.data)
+            # self.authentication_backend.send_magic_link(form.email_address.data)
         return flask.render_template("magic_link_sent.html.jinja")
 
     def verify(self, token):
@@ -86,10 +86,9 @@ class Auth(flask.Blueprint):
                         code=303,
                     )
                 )
-            else:
-                return flask.redirect(
-                    flask.url_for(
-                        "radkummerkasten.radkummerkasten",
-                        code=303,
-                    )
-                )
+        return flask.redirect(
+            flask.url_for(
+                "radkummerkasten.radkummerkasten",
+                code=303,
+            )
+        )

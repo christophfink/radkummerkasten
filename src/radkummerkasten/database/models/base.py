@@ -29,6 +29,7 @@ def snake_case(camel_case):
 
 class Base(DeclarativeBase, MappedAsDataclass):
     """Template for sqlalchemy declarative_base() to add shared functionality."""
+    # pylint: disable=too-few-public-methods
 
     id: Mapped[uuid.UUID] = mapped_column(
         primary_key=True,
@@ -37,6 +38,6 @@ class Base(DeclarativeBase, MappedAsDataclass):
     )
 
     @declared_attr.directive
-    def __tablename__(cls):
+    def __tablename__(cls):  # pylint: disable=no-self-argument
         """Return a table name derived from the class name."""
         return f"{snake_case(cls.__name__)}"

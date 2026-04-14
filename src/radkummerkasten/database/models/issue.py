@@ -28,6 +28,7 @@ class Issue(Base):
 
     Note that the first comment to this issue is shown as the issue text.
     """
+    # pylint: disable=too-few-public-methods
 
     issue_type: Mapped[IssueType]
 

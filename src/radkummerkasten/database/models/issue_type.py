@@ -10,6 +10,7 @@ __all__ = ["IssueType"]
 
 class IssueType(enum.Enum):
     """The types of issue that can be reported."""
+    # pylint: disable=too-few-public-methods
 
     # Status Quo:
 

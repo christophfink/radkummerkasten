@@ -17,6 +17,7 @@ __all__ = ["User"]
 
 class User(Base):
     """A user registered to post to the radkummerkasten map."""
+    # pylint: disable=too-few-public-methods
 
     email_address: Mapped[str] = mapped_column(unique=True)
     first_name: Mapped[str] = mapped_column(default="")
