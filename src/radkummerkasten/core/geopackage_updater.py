@@ -5,6 +5,7 @@
 
 import math
 import pathlib
+import shutil
 import tempfile
 
 import filelock
@@ -211,4 +212,7 @@ class GeopackageUpdater:
                         )
                         break
 
-                temporary_geopackage.move(self.path)
+                shutil.move(
+                    temporary_geopackage,
+                    self.path,
+                )
