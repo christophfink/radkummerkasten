@@ -16,11 +16,11 @@
       container: 'map',
       style: '/maps/combined-root.json',
       bearing: 0,
-      pitch: 15,
+      pitch: 20,
       zoom: 14.5,
       center: [16.3659, 48.1998],
       minZoom: 7,
-      maxZoom: 16.9,
+      maxZoom: 17.9,
     }
 
     options = { ...defaultOptions, ...options }

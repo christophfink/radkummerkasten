@@ -31,7 +31,7 @@
         "https://mapsneu.wien.gv.at/basemap/bmapgelaende/grau/google3857/{z}/{y}/{x}.jpeg"
       ],
       "minzoom": 11,
-      "maxzoom": 13.9
+      "maxzoom": 17.9
     },
     "radlkarte": {
       "type": "vector",
@@ -47,7 +47,15 @@
       "id": "Schummerung",
       "type": "raster",
       "source": "schummerung",
-      "raster-opacity": 0.1,
+      "raster-opacity": [
+        "interpolate",
+        ["linear"],
+        ["zoom"],
+        15,
+        0.1,
+        17,
+        0.0
+    ],
       "raster-brightness-min": 0.2,
       "raster-resampling": "linear"
     },
